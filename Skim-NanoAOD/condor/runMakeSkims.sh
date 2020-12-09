@@ -24,13 +24,13 @@ fi
 echo "All arguements: "$@
 echo "Number of arguements: "$#
 year=$1
-channel=$2
-varname=${channel}_FileList_${year}
+sample=$2
+varname=${sample}_FileList_${year}
 cd sample
 source fileList_${year}.sh
 cd -
-echo "./makeSkim ${year} ${channel}_${year}_skim.root ${!varname}"
-./makeSkim ${year} ${channel}_${year}_skim.root ${!varname}
+echo "./makeSkim ${year} Skim-NanoAOD_${year}_${sample}.root ${!varname}"
+./makeSkim ${year} Skim-NanoAOD_${year}_${sample}.root ${!varname}
 
 printf "Done Histogramming at ";/bin/date
 #---------------------------------------------
@@ -40,7 +40,7 @@ condorOutDir=/store/user/rverma/Output/cms-hcs-run2/Skim-NanoAOD
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Running Interactively" ;
 else
-    xrdcp -f ${channel}_${year}_skim.root root://cmseos.fnal.gov/${condorOutDir}/${year}
+    xrdcp -f Skim-NanoAOD_${year}_${sample}.root root://cmseos.fnal.gov/${condorOutDir}/${year}
     echo "Cleanup"
     rm -rf CMSSW_10_2_14
     rm *.root
