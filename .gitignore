@@ -1,0 +1,9 @@
+/Skim_NanoAOD/condor/tmpSub
+/Skim_NanoAOD/sample/*.pyc
+/Skim_NanoAOD/src/*.o
+/Skim_NanoAOD/*.root
+
+/RecoNtuple_Skim/condor/tmpSub
+/RecoNtuple_Skim/sample/*.pyc
+/RecoNtuple_Skim/src/*.o
+/RecoNtuple_Skim/*.root
