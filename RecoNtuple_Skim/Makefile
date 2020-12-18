@@ -49,5 +49,4 @@ src/EventPick_gen.o: src/Selector_gen.o src/EventPick_gen.cpp interface/EventPic
 	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE src/EventPick_gen.cpp 
 
 clean:
-	rm src/EventTree.o src/Selector.o src/EventPick.o src/BTagCalibrationStandalone.o makeRecoNtuple
-	$(MAKE) -C JEC clean
+	rm *.o src/*.o 

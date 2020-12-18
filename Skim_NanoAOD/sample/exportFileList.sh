@@ -1,3 +1,3 @@
-source fileList_2016.sh
-source fileList_2017.sh
-source fileList_2018.sh
+source NanoAOD_Gen_Files_2016.sh
+source NanoAOD_Gen_Files_2017.sh
+source NanoAOD_Gen_Files_2018.sh

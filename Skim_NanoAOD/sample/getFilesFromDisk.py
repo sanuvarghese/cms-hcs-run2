@@ -10,7 +10,6 @@ def getFileList_DAS(sample):
         print ("PROBLEM")
         print (sample)
         print ()
-
     return names
 
 def getFileList_EOS(sample):

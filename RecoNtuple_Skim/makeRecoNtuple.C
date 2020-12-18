@@ -339,7 +339,7 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
     cout << outputFileName << endl;
     TFile *outputFile = new TFile(outputFileName.c_str(),"recreate");
-    outputTree = new TTree("AnalysisTree","AnalysisTree");
+    outputTree = new TTree("RecoNtuple_Skim","RecoNtuple_Skim");
 
     if (saveCutflow) {
 	evtPick->init_cutflow_files(outputFileName);

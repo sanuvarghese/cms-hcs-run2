@@ -7,3 +7,9 @@
 /RecoNtuple_Skim/sample/*.pyc
 /RecoNtuple_Skim/src/*.o
 /RecoNtuple_Skim/*.root
+
+/CBA_RecoNtuple/Hist_Ntuple/hists
+/CBA_RecoNtuple/Hist_Ntuple/*.pyc
+/CBA_RecoNtuple/Hist_Ntuple/sample/*.pyc
+/CBA_RecoNtuple/Hist_Ntuple/condor/*.pyc
+/CBA_RecoNtuple/Hist_Ntuple/condor/tmpSub

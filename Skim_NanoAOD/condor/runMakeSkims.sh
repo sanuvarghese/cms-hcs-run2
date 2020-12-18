@@ -25,12 +25,19 @@ echo "All arguements: "$@
 echo "Number of arguements: "$#
 year=$1
 sample=$2
+job=$3
+nJobTotal=$4
 varname=${sample}_FileList_${year}
 cd sample
-source fileList_${year}.sh
+source NanoAOD_Gen_FileLists_cff.sh 
 cd -
-echo "./makeSkim ${year} ${sample}.root ${!varname}"
-./makeSkim ${year} ${sample}.root ${!varname}
+if [ -z $job ] ; then
+    jobNum=""
+else
+    jobNum=" ${job}of${nJobTotal}"
+fi
+echo "./makeSkim ${year}${jobNum} ${sample}.root ${!varname}"
+./makeSkim ${year}$jobNum ${sample}.root ${!varname}
 
 printf "Done Histogramming at ";/bin/date
 #---------------------------------------------
@@ -40,7 +47,7 @@ condorOutDir=/store/user/rverma/Output/cms-hcs-run2/Skim_NanoAOD
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Running Interactively" ;
 else
-    xrdcp -f ${sample}.root root://cmseos.fnal.gov/${condorOutDir}/${year}
+    xrdcp -f ${sample}*.root root://cmseos.fnal.gov/${condorOutDir}/${year}
     echo "Cleanup"
     rm -rf CMSSW_10_2_14
     rm *.root

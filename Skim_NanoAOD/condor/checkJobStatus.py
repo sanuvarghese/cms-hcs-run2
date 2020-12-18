@@ -5,9 +5,7 @@ import sys
 
 #IMPORT MODULES FROM OTHER DIR
 sys.path.insert(0, os.getcwd().replace("condor","sample"))
-from AllSamples_2016 import sampleList_2016
-from AllSamples_2017 import sampleList_2017
-from AllSamples_2018 import sampleList_2018
+from NanoAOD_Gen_SplitJobs_cff import Samples_2016, Samples_2017, Samples_2018
 
 #----------------------------------------
 #INPUT Command Line Arguments 
@@ -36,7 +34,7 @@ condorLogDir = "tmpSub/log"
 #----------------------------------------
 submittedDict = {}
 #Create for Base, Signal region
-sampleList = eval("sampleList_%s"%year)
+sampleList = eval("Samples_%s"%year)
 for sampleName in sampleList.keys():
     rootFile = "%s_%s_Skim_NanoAOD.root"%(sampleName, year)
     submittedDict[rootFile] = sampleName

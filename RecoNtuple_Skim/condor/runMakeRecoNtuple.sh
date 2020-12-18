@@ -25,12 +25,19 @@ echo "All arguements: "$@
 echo "Number of arguements: "$#
 year=$1
 sample=$2
+job=$3
+nJobTotal=$4
 varname=${sample}_FileList_${year}
 cd sample
-source Skim_NanoAOD_Files_$year.sh
+source Skim_NanoAOD_FileLists_cff.sh 
 cd -
-echo "./makeRecoNtuple ${year} ${sample} . ${!varname}"
-./makeRecoNtuple ${year} ${sample} . ${!varname}
+if [ -z $job ] ; then
+    jobNum=""
+else
+    jobNum=" ${job}of${nJobTotal}"
+fi
+echo "./makeRecoNtuple ${year} ${sample} ${jobNum} . ${!varname}"
+./makeRecoNtuple ${year} ${sample} ${jobNum} . ${!varname}
 
 printf "Done Histogramming at ";/bin/date
 #---------------------------------------------

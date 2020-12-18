@@ -4,9 +4,7 @@ import sys
 
 #IMPORT MODULES FROM OTHER DIR
 sys.path.insert(0, os.getcwd().replace("RecoNtuple_Skim/condor","Skim_NanoAOD/sample"))
-from NanoAOD_Gen_Samples_2016 import sampleList_2016
-from NanoAOD_Gen_Samples_2017 import sampleList_2017
-from NanoAOD_Gen_Samples_2018 import sampleList_2018
+from NanoAOD_Gen_SplitJobs_cff import Samples_2016, Samples_2017, Samples_2018 
 
 if not os.path.exists("tmpSub/log"):
     os.makedirs("tmpSub/log")
@@ -31,16 +29,20 @@ Log    = %s/log_$(cluster)_$(process).condor\n\n'%(condorLogDir, condorLogDir, c
 #----------------------------------------
 subFile = open('tmpSub/condorSubmit.sh','w')
 for year in [2016,2017,2018]:
-    sampleList = eval("sampleList_%i"%year)
+    sampleList = eval("Samples_%i"%year)
     jdlName = 'submitJobs_%s.jdl'%(year)
     jdlFile = open('tmpSub/%s'%jdlName,'w')
     jdlFile.write('Executable =  runMakeRecoNtuple.sh \n')
     jdlFile.write(common_command)
     condorOutDir="/store/user/rverma/Output/cms-hcs-run2/RecoNtuple_Skim"
     os.system("eos root://cmseos.fnal.gov mkdir -p %s/%s"%(condorOutDir, year))
+    jdlFile.write("X=$(step)+1\n")
     
-    for sampleName in sampleList.keys():
-        run_command =  'Arguments  = %s %s \nQueue 1\n\n' %(year, sampleName)
+    for sampleName, nJob in sampleList.items():
+        if nJob==1:
+            run_command =  'Arguments  = %s %s \nQueue 1\n\n' %(year, sampleName)
+        else:
+            run_command =  'Arguments  = %s %s $INT(X) %i\nQueue %i\n\n' %(year, sampleName, nJob, nJob)
 	jdlFile.write(run_command)
     
 	#print "condor_submit jdl/%s"%jdlFile
