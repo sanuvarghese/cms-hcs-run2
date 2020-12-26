@@ -124,12 +124,6 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
     cout << sampleType << "  " << systematicType << endl;
     initCrossSections();
     if (isMC && crossSections.find(sampleType) == crossSections.end()) {
-	//    if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
-	//	cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
-	// for (int i =0; i < sizeof(allowedSampleTypes)/sizeof(allowedSampleTypes[0]); i++){
-	//     cout << "    "<<allowedSampleTypes[i] << endl;
-	// }			
-
 	if (sampleType.find("Test") == std::string::npos){
 	    cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
 	    for (auto const& pair: crossSections) {
@@ -313,9 +307,9 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
     std::string outputFileName;
 
     if (nJob==-1){
-	outputFileName = outputDirectory + "/" + sampleType+"_.root";
+	outputFileName = outputDirectory + "/" + sampleType+"_RecoNtuple_Skim.root";
     } else {
-	outputFileName = outputDirectory + "/" + sampleType+"_"+to_string(nJob)+"of"+to_string(totJob)+".root";
+	outputFileName = outputDirectory + "/" + sampleType+"_RecoNtuple_Skim_"+to_string(nJob)+"of"+to_string(totJob)+".root";
     }
     // char outputFileName[100];
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
@@ -410,6 +404,7 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
     _eleEffWeight_Do = 1.;
 
     Long64_t nEntr = tree->GetEntries();
+    cout<<nEntr<<endl;
 
     bool saveAllEntries = false;
 
@@ -496,7 +491,7 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
 
 
     for(Long64_t entry=entryStart; entry<entryStop; entry++){
-        if(entry >= 10000){break;}
+        //if(entry >= 10000){break;}
 	if(entry%dumpFreq == 0){
 	    // duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
 	    // std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
@@ -703,7 +698,6 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
 		}				
 	    }
 
-	    if (year=="2016" || year=="2017"){
 	    outputTree->Fill();
 	    if (tree->event_==eventNum){
 		cout << "--------------------------------------------" << endl;
@@ -714,7 +708,6 @@ makeRecoNtuple::makeRecoNtuple(int ac, char** av)
 	    }
 	  }
     }
-  }
     outputFile->cd();
     outputTree->Write();
 

@@ -1,3 +1,0 @@
-source NanoAOD_Gen_Files_2016.sh
-source NanoAOD_Gen_Files_2017.sh
-source NanoAOD_Gen_Files_2018.sh

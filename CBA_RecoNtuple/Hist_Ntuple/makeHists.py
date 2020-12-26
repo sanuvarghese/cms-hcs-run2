@@ -2,7 +2,7 @@ from ROOT import TH1F, TFile, TChain, TCanvas, gDirectory, gROOT
 import sys
 import os
 from optparse import OptionParser
-sys.path.insert(0, os.getcwd().replace("Hist_Ntuple","Hist_Ntuple/sample"))
+sys.path.insert(0, os.getcwd()+"/sample")
 from SampleInfo import *
 from HistInfo import *
 from HistFunc import *
@@ -27,11 +27,8 @@ parser.add_option("--cr", "--controlRegion", dest="controlRegion", default="",ty
                      help="which control selection and region such as Tight, VeryTight, Tight0b, looseCR2e1, looseCRe2g1")
 parser.add_option("--plot", dest="plotList",action="append",
                      help="Add plots" )
-parser.add_option("--allPlots","--AllPlots", dest="makeAllPlots",action="store_true",default=False,
+parser.add_option("--allPlots","--allPlots", dest="makeAllPlots",action="store_true",default=False,
                      help="Make full list of plots in histogramDict" )
-parser.add_option("--fitHist","--fitHist", dest="makeFitHist",action="store_true",default=False,
-                     help="List of histograms to be used for fitting" )
-
 (options, args) = parser.parse_args()
 year = options.year
 ttbarDecayMode = options.ttbarDecayMode
@@ -40,10 +37,9 @@ sample = options.sample
 level =options.level
 controlRegion = options.controlRegion
 makeAllPlots = options.makeAllPlots
-makeFitHist = options.makeFitHist
 toPrint("Running for Year, Channel, Sample", "%s, %s, %s"%(year, channel, sample))
 print parser.parse_args()
-
+samples = getSamples(year)
 
 #-----------------------------------------
 #INPUT AnalysisNtuples Directory
@@ -211,7 +207,8 @@ else:
     print "Unknown final state, options are Mu and Ele"
     sys.exit()
 
-weights = "%s*%s*%s*%s*%s*%s*%s*%s*%s*%s"%(evtWeight,prefire,Pileup,MuEff,EleEff,Q2,Pdf,isr,fsr,btagWeight)
+weights = "%s*%s*%s*%s*%s*%s*%s*%s*%s"%(evtWeight,Pileup,MuEff,EleEff,Q2,Pdf,isr,fsr,btagWeight)
+#weights = "evtWeight"
 toPrint("Extra cuts ", extraCuts)
 toPrint("Final event weight ", weights)
 
@@ -222,7 +219,7 @@ histogramInfo = GetHistogramInfo(extraCuts,nBJets)
 plotList = options.plotList
 if plotList is None:
     if makeAllPlots:
-        plotList = histogramInfo.keys()
+        plotList = allPlotList 
 plotList.sort()
 for p in plotList: print "%s,"%p,
 histogramsToMake = plotList
@@ -243,8 +240,8 @@ if not "QCD_DD" in sample:
         print "Sample isn't in list"
         print samples.keys()
         sys.exit()
-    tree = TChain("AnalysisTree")
-    fileList = samples[sample][0]
+    tree = TChain("RecoNtuple_Skim")
+    fileList = samples[sample]
     for fileName in fileList:
         if "Dilep" in ttbarDecayMode:
             fullPath = "%s/Dilep_%s"%(analysisNtupleLocation, fileName)

@@ -15,23 +15,29 @@ def getBaseHists(fileDict, hName, CR):
     dataHist     = []
     bkgHists     = []
     qcdMCHist    = []
-    qcdDDHist    = []
+    #qcdDDHist    = []
     for sample in Samples.keys():
         if CR=="":
-            hPath = "Base/SignalRegion/%s"%(hName)
+            hPath = "%s/Base/SR/%s"%(sample, hName)
+            if sample=="Data":
+                hPath = "data_obs/Base/SR/%s"%(hName)
         else: 
-            hPath = "Base/ControlRegion/%s/%s"%(CR, hName)
+            hPath = "%s/Base/CR/%s/%s"%(sample, CR, hName)
+            if sample=="Data":
+                hPath = "data_obs/Base/CR/%s/%s"%(CR, hName)
+        print hPath
         hist = fileDict[sample].Get(hPath)
         hist = hist.Clone("%s_%s_%s"%(sample, CR, hName))
         if sample=="Data":
             dataHist.append(hist)
         elif sample=="QCD":
             qcdMCHist.append(hist)
-        elif sample=="QCD_DD":
-            qcdDDHist.append(hist)
+        #elif sample=="QCD_DD":
+            #qcdDDHist.append(hist)
         else:
             bkgHists.append(hist)
-    return dataHist, bkgHists, qcdMCHist, qcdDDHist
+    #return dataHist, bkgHists, qcdMCHist, qcdDDHist
+    return dataHist, bkgHists, qcdMCHist
 
 def getSystHists(fileDict, hName, CR, level):
     '''
@@ -48,9 +54,9 @@ def getSystHists(fileDict, hName, CR, level):
         hBkg = []
         for sample in SamplesSyst:
             if CR=="":
-                hPath = "%s%s/SignalRegion/%s"%(syst, level, hName)
+                hPath = "%s/%s%s/SR/%s"%(sample, syst, level, hName)
             else: 
-                hPath = "%s%s/ControlRegion/%s/%s"%(syst, level, CR, hName)
+                hPath = "%s/%s%s/CR/%s/%s"%(sample, syst, level, CR, hName)
             hist = fileDict[sample].Get(hPath)
             hist = hist.Clone("%s_%s%s_%s_%s"%(sample,syst,level,hName,CR))
             if sample=="QCD":
@@ -218,7 +224,7 @@ def sortHists(hAllBkgs, isReverse):
 #----------------------------------------------------------
 #Jet selection naming: a3j_e2b = atleast 3 jet, out of which 2 are b jets: nJet >= 3, nBJet ==2
 def formatCRString(controlRegion="tight_a4j_e0b"):
-    allJetSel = "jets >=3, b jets >=1"
+    allJetSel = "jets >=4, b jets >=2"
     if not controlRegion=="":
     	splitCR = controlRegion.split("_")
     	jetCut  = splitCR[1].strip()

@@ -8,8 +8,8 @@ from NanoAOD_Gen_SplitJobs_cff import Samples_2016, Samples_2017, Samples_2018
 
 eosDir = '/store/user/rverma/Output/cms-hcs-run2/Skim_NanoAOD'
 skimFiles = open('Skim_NanoAOD_FileLists_cff.sh','w')
-for year in [2016]:
-#for year in [2016,2017,2018]:
+#for year in [2016]:
+for year in [2016,2017,2018]:
     print  "------------: %s :-----------"%year 
     print  "Sub\t  Done\t Diff\t Sample"
     missingJobs = {}
@@ -18,9 +18,7 @@ for year in [2016]:
     skimFiles.write("eosDirSkim=root://cmseos.fnal.gov/%s\n"%eosDir)
     for sampleName, nJob in sampleList.items():
         line += '%s_FileList_%i="'%(sampleName,year)
-        extraArgs = "%s.root"%sampleName
-        if nJob is not 1:
-            extraArgs = "%s_*.root"%sampleName
+        extraArgs = "%s_Skim_NanoAOD*.root"%sampleName
         fileList = subprocess.Popen('eos root://cmseos.fnal.gov/ ls %s/%i/%s'%(eosDir, year, extraArgs),shell=True,stdout=subprocess.PIPE).communicate()[0].split('\n')
         fileList.remove("")
         nFiles = len(fileList)

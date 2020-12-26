@@ -26,11 +26,11 @@ parser.add_option("-d", "--decayMode", dest="decayMode", default="Semilep",type=
                      help="Specify which decayMode moded of ttbar SemiLep or DiLep? default is SemiLep")
 parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
 		  help="Specify which channel Mu or Ele? default is Mu" )
-parser.add_option("-s", "--sample", dest="sample", default="TTGamma",type='str',
+parser.add_option("-s", "--sample", dest="sample", default="TTbar",type='str',
 		  help="name of the MC sample" )
 parser.add_option("--cr", "--CR", dest="CR", default="",type='str', 
                      help="which control selection and region")
-parser.add_option("--hist", "--hist", dest="hName", default="phosel_M3",type='str', 
+parser.add_option("--hist", "--hist", dest="hName", default="presel_Njet",type='str', 
                      help="name of the histogram")
 (options, args) = parser.parse_args()
 year            = options.year
@@ -46,12 +46,12 @@ print "------------------------------------"
 #-----------------------------------------
 #Path of the I/O histrograms/plots
 #----------------------------------------
-inHistSubDir = "Hists/%s/%s/%s/Merged"%(year, decayMode, channel)
+inHistSubDir = "%s/%s/%s/Merged"%(year, decayMode, channel)
 inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
 if CR=="":
-    outPlotSubDir = "Plots/Syst/%s/%s/%s/SR"%(year, decayMode, channel)
+    outPlotSubDir = "Plot_Hist/Syst/%s/%s/%s/SR"%(year, decayMode, channel)
 else:
-    outPlotSubDir = "Plots/%s/Syst/%s/%s/CR/%s"%(year, decayMode, channel, CR)
+    outPlotSubDir = "Plot_Hist/%s/Syst/%s/%s/CR/%s"%(year, decayMode, channel, CR)
 outPlotFullDir = "%s/%s"%(condorHistDir, outPlotSubDir)
 if not os.path.exists(outPlotFullDir):
     os.makedirs(outPlotFullDir)
@@ -145,7 +145,7 @@ for index, syst in enumerate(Systematics):
     lowBinEdge = xAxis.GetBinLowEdge(1)
     upBinEdge = xAxis.GetBinUpEdge(hBase_.GetNbinsX())
     #print lowBinEdge, upBinEdge
-    newWidth = int((upBinEdge - lowBinEdge)/20)
+    newWidth = int((upBinEdge - lowBinEdge)/10)
     if int(newWidth) ==0: 
         newWidth = 1
     newBins = numpy.arange(lowBinEdge,upBinEdge,newWidth)
@@ -230,4 +230,5 @@ baseLine.SetLineColor(1);
 baseLine.Draw("same");
 
 #canvas.SaveAs("%s/%s.pdf"%(outPlotFullDir, hName))
+canvas.SaveAs("%s/%s_%s_%s.png"%(outPlotFullDir, hName, year, channel))
 #canvas.SaveAs("SystRatio_%s_%s_%s_%s_%s_%s.pdf"%(year, decayMode, channel, hName, sample, CR))

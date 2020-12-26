@@ -36,8 +36,8 @@ if [ -z $job ] ; then
 else
     jobNum=" ${job}of${nJobTotal}"
 fi
-echo "./makeSkim ${year}${jobNum} ${sample}.root ${!varname}"
-./makeSkim ${year}$jobNum ${sample}.root ${!varname}
+echo "./makeSkim ${year}${jobNum} ${sample}_Skim_NanoAOD.root ${!varname}"
+./makeSkim ${year}$jobNum ${sample}_Skim_NanoAOD.root ${!varname}
 
 printf "Done Histogramming at ";/bin/date
 #---------------------------------------------
@@ -47,7 +47,7 @@ condorOutDir=/store/user/rverma/Output/cms-hcs-run2/Skim_NanoAOD
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Running Interactively" ;
 else
-    xrdcp -f ${sample}*.root root://cmseos.fnal.gov/${condorOutDir}/${year}
+    xrdcp -f ${sample}_Skim_NanoAOD*.root root://cmseos.fnal.gov/${condorOutDir}/${year}
     echo "Cleanup"
     rm -rf CMSSW_10_2_14
     rm *.root

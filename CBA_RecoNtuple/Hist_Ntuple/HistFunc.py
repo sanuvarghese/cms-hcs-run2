@@ -39,7 +39,7 @@ def getQCDTransFact(year, channel, nBJets_, outputFile_, qcdTFDirInFile):
     #-----------------------------------------
     #high rel iso, nJets ==2, nBJets_ = 
     #----------------------------------------
-    tree = TChain("AnalysisTree")
+    tree = TChain("RecoNtuple_Skim")
     fileList = samples[sample][0]
     for fileName in fileList:
     	tree.Add("%s/QCDcr_%s"%(ntupleDirBaseCR,fileName))
@@ -60,7 +60,7 @@ def getQCDTransFact(year, channel, nBJets_, outputFile_, qcdTFDirInFile):
     	qcdRelIsoCut = "muPFRelIso<0.15"
     else:
         qcdRelIsoCut = "elePFRelIso<0.01"
-    tree = TChain("AnalysisTree")
+    tree = TChain("RecoNtuple_Skim")
     fileList = samples[sample][0]
     for fileName in fileList:
     	tree.Add("%s/%s"%(ntupleDirBase,fileName))
@@ -224,14 +224,14 @@ def getShapeFromCR(year, channel, nJetSel, nBJets_, hInfo, outputFile_, qcdShape
         hist_ = TH1F("%s_%s"%(hInfo[1], sample_),"%s_%s"%(hInfo[1],sample_),hInfo[2][0],hInfo[2][1],hInfo[2][2])
         print "Filling histograms for QCD Shape: ", hist_.GetName() 
 	if sample_ not in ["QCDMu", "QCDEle","DataMu","DataEle", "TTGJets"]:
-            tree = TChain("AnalysisTree")
+            tree = TChain("RecoNtuple_Skim")
             fileList = samples[sample_][0]
             for fileName in fileList:
     	        tree.Add("%s/QCDcr_%s"%(ntupleDirBaseCR,fileName))
             tree.Draw("%s>>%s_%s"%(hInfo[0],hInfo[1],sample_),evtWeight, "goff")
             hNonQCDBkgs.append(hist_)
         if "Data" in sample_:
-            tree = TChain("AnalysisTree")
+            tree = TChain("RecoNtuple_Skim")
             fileList = samples[sampleList[-1]][0]
             evtWeight = hInfo[3]
             if evtWeight[-1]=="*":

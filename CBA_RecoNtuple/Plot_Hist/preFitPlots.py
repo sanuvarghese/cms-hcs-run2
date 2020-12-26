@@ -21,13 +21,13 @@ yPadRange = [0.0,0.30-padGap, 0.30+padGap,1.0]
 parser = OptionParser()
 parser.add_option("-y", "--year", dest="year", default="2016",type='str',
                      help="Specifyi the year of the data taking" )
-parser.add_option("-d", "--decayMode", dest="decayMode", default="SemiLep",type='str',
-                     help="Specify which decayMode moded of ttbar SemiLep or DiLep? default is SemiLep")
+parser.add_option("-d", "--decayMode", dest="decayMode", default="Semilep",type='str',
+                     help="Specify which decayMode moded of ttbar Semilep or DiLep? default is Semilep")
 parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
 		  help="Specify which channel Mu or Ele? default is Mu" )
 parser.add_option("--cr", "--CR", dest="CR", default="",type='str', 
                      help="which control selection and region")
-parser.add_option("--plot", dest="plotList",action="append",default=["presel_Njet"], help="Add plots" )
+parser.add_option("--plot", dest="plotList",action="append",default=["presel_M3"], help="Add plots" )
 parser.add_option("--morePlots","--MorePlots",dest="makeMorePlots",action="store_true",default=False,
                      help="Make larger list of kinematic distributions" )
 parser.add_option("--allPlots","--allPlots",dest="makeAllPlots",action="store_true",default=False,
@@ -47,12 +47,12 @@ makeAllPlots    = options.makeAllPlots
 #-----------------------------------------
 #Path of the I/O histrograms/plots
 #----------------------------------------
-inHistSubDir = "Hists/%s/%s/%s/Merged"%(year, decayMode, channel)
+inHistSubDir = "%s/%s/%s/Merged"%(year, decayMode, channel)
 inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
 if CR=="":
-    outPlotSubDir = "Plots/%s/%s/%s/SR"%(year, decayMode, channel)
+    outPlotSubDir = "Plot_Hist/%s/%s/%s/SR"%(year, decayMode, channel)
 else:
-    outPlotSubDir = "Plots/%s/%s/%s/CR/%s"%(year, decayMode, channel, CR)
+    outPlotSubDir = "Plot_Hist/%s/%s/%s/CR/%s"%(year, decayMode, channel, CR)
 outPlotFullDir = "%s/%s"%(condorHistDir, outPlotSubDir)
 if not os.path.exists(outPlotFullDir):
     os.makedirs(outPlotFullDir)
@@ -99,7 +99,8 @@ def makePlot(hName, CR, isQCDMC, isData, isLog, isRatio):
         gPad.SetLogy(True);
 
     #Get nominal histograms
-    dataHist, bkgHists, qcdMCHist, qcdDDHist = getBaseHists(fileDict, hName, CR)
+    #dataHist, bkgHists, qcdMCHist, qcdDDHist = getBaseHists(fileDict, hName, CR)
+    dataHist, bkgHists, qcdMCHist = getBaseHists(fileDict, hName, CR)
     hSumOtherBkg = bkgHists[0].Clone("hSumOtherBkg")
     hSumOtherBkg.Reset()
     hAllBkgs = bkgHists
@@ -110,9 +111,9 @@ def makePlot(hName, CR, isQCDMC, isData, isLog, isRatio):
     if isQCDMC:
         hSumAllBkg.Add(qcdMCHist[0])
         hAllBkgs.append(qcdMCHist[0])
-    else:
-        hSumAllBkg.Add(qcdDDHist[0])
-        hAllBkgs.append(qcdDDHist[0])
+    #else:
+    #    hSumAllBkg.Add(qcdDDHist[0])
+    #    hAllBkgs.append(qcdDDHist[0])
 
     #Stack nominal hists
     xTitle = histograms[hName][0]
@@ -186,7 +187,15 @@ def makePlot(hName, CR, isQCDMC, isData, isLog, isRatio):
         chName = "%s, CR"%chName
     chCRName = "#splitline{#font[42]{%s}}{#font[42]{%s}}"%(chName, crName)
     extraText   = "#splitline{Preliminary}{%s}"%chCRName
-    CMS_lumi(canvas, iPeriod, iPosX, extraText)
+    #CMS_lumi(canvas, iPeriod, iPosX, extraText)
+    lumi_13TeV = "35.9 fb^{-1}"
+    if "16" in year:
+        lumi_13TeV = "35.9 fb^{-1} (2016)"
+    if "17" in year:
+        lumi_13TeV = "41.5 fb^{-1} (2017)"
+    if "18" in year:
+        lumi_13TeV = "59.7 fb^{-1} (2018)"
+    CMS_lumi(lumi_13TeV, canvas, iPeriod, iPosX, extraText)
 
     #Draw the ratio of data and all background
     if isData and isRatio:
@@ -210,7 +219,8 @@ def makePlot(hName, CR, isQCDMC, isData, isLog, isRatio):
         baseLine.SetLineColor(3);
         baseLine.Draw("SAME");
         hRatio.Draw("same")
-    canvas.SaveAs("%s/%s.pdf"%(outPlotFullDir, hName))
+    #canvas.SaveAs("%s/%s.pdf"%(outPlotFullDir, hName))
+    canvas.SaveAs("%s/%s_%s_%s.png"%(outPlotFullDir, hName, year, channel))
 
 #-----------------------------------------
 #Finally make the plot for each histogram

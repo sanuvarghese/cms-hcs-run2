@@ -70,28 +70,22 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     if (!isData_){
 	chain->SetBranchStatus("Generator_weight",1);
 	chain->SetBranchAddress("Generator_weight", &genWeight_);
-
-	chain->SetBranchStatus("nLHEScaleWeight",1);
-	chain->SetBranchAddress("nLHEScaleWeight", &nLHEScaleWeight_);
-	
-	chain->SetBranchStatus("LHEScaleWeight",1);
-	chain->SetBranchAddress("LHEScaleWeight", &LHEScaleWeight_);
-	
-	chain->SetBranchStatus("nLHEPdfWeight",1);
-	chain->SetBranchAddress("nLHEPdfWeight", &nLHEPdfWeight_);
-	
-	chain->SetBranchStatus("LHEPdfWeight",1);
-	chain->SetBranchAddress("LHEPdfWeight", &LHEPdfWeight_);
-	
+    chain->SetBranchStatus("nLHEScaleWeight",1);
+    chain->SetBranchAddress("nLHEScaleWeight", &nLHEScaleWeight_);
+    
+    chain->SetBranchStatus("LHEScaleWeight",1);
+    chain->SetBranchAddress("LHEScaleWeight", &LHEScaleWeight_);
+    
+    chain->SetBranchStatus("nLHEPdfWeight",1);
+    chain->SetBranchAddress("nLHEPdfWeight", &nLHEPdfWeight_);
+    
+    chain->SetBranchStatus("LHEPdfWeight",1);
+    chain->SetBranchAddress("LHEPdfWeight", &LHEPdfWeight_);
 	chain->SetBranchStatus("PSWeight",1);
 	chain->SetBranchAddress("PSWeight", &PSWeight_);
 	
 	chain->SetBranchStatus("nPSWeight",1);
 	chain->SetBranchAddress("nPSWeight", &nPSWeight_);
-	
-	chain->SetBranchStatus("LHEWeight_originalXWGTUP",1);
-	chain->SetBranchAddress("LHEWeight_originalXWGTUP", &LHEWeight_originalXWGTUP_);
-	
     }
 
     // MET

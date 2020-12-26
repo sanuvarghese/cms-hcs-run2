@@ -22,17 +22,21 @@ decay   = options.ttbarDecayMode
 #-----------------------------------------
 #Path of the output histrograms
 #----------------------------------------
-inHistSubDir = "Hists/%s/%s/%s"%(year, decay, channel)
-inHistFullDir = "/eos/uscms/%s/%s"%(condorHistDir, inHistSubDir)
-#inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
+inHistSubDir = "%s/%s/%s"%(year, decay, channel)
+#inHistFullDir = "/eos/uscms/%s/%s"%(condorHistDir, inHistSubDir)
+inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
 condorLogDir = "tmpSub/log"
 
 #----------------------------------------
 #Get all submitted jobs
 #----------------------------------------
 submittedDict = {}
-if channel=="Mu": Samples = SampleListMu
-else: Samples = SampleListEle
+if channel=="Mu": 
+    Samples.remove("QCDEle")
+    Samples.remove("DataEle")
+else: 
+    Samples.remove("QCDMu")
+    Samples.remove("DataMu")
 #Create for Base, Signal region
 for sample in Samples:
     rootFile = "%s_Base_SR.root"%sample

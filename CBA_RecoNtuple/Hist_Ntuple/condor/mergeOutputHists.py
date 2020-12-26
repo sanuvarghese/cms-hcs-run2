@@ -25,28 +25,32 @@ channel = options.channel
 decay   = options.ttbarDecayMode
 
 #-----------------------------------------
-#Path of the I/O histrograms
-#----------------------------------------
-inHistSubDir = "Hists/%s/%s/%s"%(year, decay, channel)
-inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
-outHistSubDir = "Hists/%s/%s/%s/Merged"%(year, decay, channel)
-outHistFullDir = "%s/%s"%(condorHistDir, outHistSubDir)
-runCmd("eos root://cmseos.fnal.gov mkdir -p %s"%outHistFullDir)
-
-#-----------------------------------------
 #Merge histograms using hadd
 #----------------------------------------
 def runCmd(cmd):
     print "\n\033[01;32m Excecuting: %s \033[00m"%cmd
     os.system(cmd)
 
+#-----------------------------------------
+#Path of the I/O histrograms
+#----------------------------------------
+inHistSubDir = "%s/%s/%s"%(year, decay, channel)
+inHistFullDir = "%s/%s"%(condorHistDir, inHistSubDir)
+outHistSubDir = "%s/%s/%s/Merged"%(year, decay, channel)
+outHistFullDir = "%s/%s"%(condorHistDir, outHistSubDir)
+runCmd("eos root://cmseos.fnal.gov mkdir -p %s"%outHistFullDir)
+
 if channel in ["mu", "Mu", "MU", "mU"]:
-    for sampleMu in SampleListMu:
+    Samples.remove("QCDEle")
+    Samples.remove("DataEle")
+    for sampleMu in Samples:
         haddOut = "root://cmseos.fnal.gov/%s/%s.root"%(outHistFullDir, sampleMu)
         haddIn  = "`xrdfs root://cmseos.fnal.gov ls -u %s | grep \'%s_.*root\'`"%( inHistFullDir, sampleMu)
         runCmd("hadd -f %s %s"%(haddOut, haddIn))
 else:
-    for sampleEle in SampleListEle:
+    Samples.remove("QCDMu")
+    Samples.remove("DataMu")
+    for sampleEle in Samples:
         haddOut = "root://cmseos.fnal.gov/%s/%s.root"%(outHistFullDir, sampleEle)
         haddIn  = "`xrdfs root://cmseos.fnal.gov ls -u %s | grep \'%s_.*root\'`"%( inHistFullDir, sampleEle)
         runCmd("hadd -f %s %s"%(haddOut, haddIn))

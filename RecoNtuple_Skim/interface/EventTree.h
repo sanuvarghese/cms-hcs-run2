@@ -25,7 +25,6 @@ class EventTree{
     UInt_t    lumis_;
     
     Float_t  genWeight_;
-
     UInt_t nLHEScaleWeight_;
     Float_t LHEScaleWeight_[200];
     
@@ -36,7 +35,6 @@ class EventTree{
     Float_t PSWeight_[200];
 
     Float_t LHEWeight_originalXWGTUP_;
-    
     bool isData_;
 
     Int_t    nVtx_;
