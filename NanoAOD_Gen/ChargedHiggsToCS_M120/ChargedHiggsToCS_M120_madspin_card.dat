@@ -7,8 +7,6 @@ set max_running_process 1
 
 
 decay t~ > w- b~, w- > l- vl~
-#decay w- > l- vl~
 decay t > h+ b, h+ > c s~
-#decay h+ > c s~
 
 launch
